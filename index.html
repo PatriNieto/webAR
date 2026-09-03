@@ -20,14 +20,13 @@
   <!-- Componente con soporte nativo para AR en iOS y Android -->
   <model-viewer 
     src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" 
-    ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
+    ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz#scale=0.3,0.3,0.3"
     alt="Un astronauta en 3D" 
     ar 
     ar-modes="quick-look scene-viewer webxr" 
-    ar-scale="fixed"
+    //ar-scale="fixed"
     camera-controls 
-    shadow-intensity="1"
-    scale="0.1 0.1 0.1">
+    shadow-intensity="1">
     
     <button slot="ar-button" class="ar-button">
       Ver en tu espacio 📍
