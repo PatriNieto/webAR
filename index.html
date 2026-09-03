@@ -4,27 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WebAR</title>
-  //cargamos libreria A-Frame y AR.js
+<!--cargamos libreria A-Frame y AR.js-->>
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 </head>
-//seteamos el estilo del body para que ocupe toda la pantalla y no tenga scroll
+<!--seteamos el estilo del body para que ocupe toda la pantalla y no tenga scroll-->>
 <body style="margin: 0px; overflow: hidden;">
-  // Creamos la escena de A-Frame con AR.js habilitado y llamamos a la cámara del dispositivo
+  <!--Creamos la escena de A-Frame con AR.js habilitado y llamamos a la cámara del dispositivo-->>
   <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-       // Marcador de tipo HIRO para la detección
+       <!--Marcador de tipo HIRO para la detección-->>
       <a-marker preset="hiro">
 
         <!-- Objeto 3D: Un cubo rojo interactivo sobre el marcador -->
-         //dibujamos un cubo rojo con posición y material especificados
+         <!--dibujamos un cubo rojo con posición y material especificados-->>
         <a-box id="mi-cubo" position="0 0.5 0" material="color: red;"></a-box>
       </a-marker>
       <!-- Cámara básica para la vista -->
-       //iniciamos la cámara para la escena
+      <!--iniciamos la cámara para la escena-->>
       <a-entity camera></a-entity>
     </a-scene>
 
-    //código para la interaccion
+    <!--código para la interaccion-->>
     <script>
   // Seleccionamos el cubo mediante su ID
   const cubo = document.querySelector('#mi-cubo');
