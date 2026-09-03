@@ -3,28 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WebAR</title>
+  <title>Partículas Animadas WebAR</title>
   
-  <!-- Carga del componente <model-viewer> de ajax-->
+  <!-- Componente <model-viewer> oficial de Google -->
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
   
   <style>
-/*      Estilos básicos para centrar el contenido y mejorar la apariencia
- */    body { margin: 0; padding: 0; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #f0f0f0; }
-    model-viewer { width: 100%; height: 80vh; }
-    .ar-button { background-color: #007AFF; color: white; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 20px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    body { 
+      margin: 0; 
+      padding: 0; 
+      font-family: system-ui, -apple-system, sans-serif; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      height: 100vh; 
+      background-color: #121212; 
+      color: #ffffff;
+    }
+    
+    model-viewer { 
+      width: 100%; 
+      height: 85vh; 
+    }
+
+    .ar-button { 
+      background-color: #007AFF; 
+      color: white; 
+      border: none; 
+      padding: 14px 28px; 
+      font-size: 16px; 
+      font-weight: 600; 
+      border-radius: 30px; 
+      cursor: pointer; 
+      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.4); 
+      transition: background-color 0.2s ease;
+    }
+
+    .ar-button:active {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Componente con soporte nativo para AR en iOS y Android -->
+  <!-- Carga de modelos localmente -->
   <model-viewer 
-    src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" 
-    ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz#scale=0.03,0.03,0.03"
-    alt="Un astronauta en 3D" 
+    src="./particles.glb" 
+    ios-src="./particles.usdz"
+    alt="Partículas 3D animadas" 
     ar 
-    ar-modes="scene-viewer webxr" 
-   camera-controls 
+    ar-modes="quick-look scene-viewer webxr" 
+    ar-scale="fixed"
+    autoplay 
+    camera-controls 
     shadow-intensity="1">
     
     <button slot="ar-button" class="ar-button">
