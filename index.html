@@ -3,168 +3,58 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Partículas WebAR Reales</title>
+  <title>Partículas de Luz WebAR</title>
+  
+  <!-- Carga oficial del visor de WebAR de Google compatible con iOS Quick Look -->
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+  
   <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      font-family: system-ui, -apple-system, sans-serif;
-      background-color: #000;
+    body { 
+      margin: 0; 
+      padding: 0; 
+      font-family: system-ui, -apple-system, sans-serif; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      height: 100vh; 
+      background-color: #0d0d0d; 
     }
-    #ar-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      align-items: center;
-      padding-bottom: 40px;
-      box-sizing: border-box;
-      z-index: 10;
+    model-viewer { 
+      width: 100%; 
+      height: 85vh; 
     }
-    .btn-ar {
-      pointer-events: auto;
-      background-color: #007AFF;
-      color: white;
-      border: none;
-      padding: 14px 28px;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 30px;
-      box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4);
-      cursor: pointer;
+    .ar-button { 
+      background-color: #007AFF; 
+      color: white; 
+      border: none; 
+      padding: 14px 28px; 
+      font-size: 16px; 
+      font-weight: 600; 
+      border-radius: 30px; 
+      cursor: pointer; 
+      box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4); 
     }
   </style>
-
-  <!-- Importamos Three.js desde CDN oficial -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
-  <div id="ar-overlay">
-    <button id="start-ar" class="btn-ar">Entrar en Realidad Aumentada 📍</button>
-  </div>
+  <!-- Carga una escena de partículas ligeras y brillantes optimizada para Quick Look y Android -->
+  <model-viewer 
+    src="https://modelviewer.dev/shared-assets/models/glTF-Sample-Assets/Models/StainedGlassLamp/glTF-Binary/StainedGlassLamp.glb" 
+    ios-src="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/AlphaBlendModeTest/glTF-USDZ/AlphaBlendModeTest.usdz"
+    alt="Luz y Partículas WebAR" 
+    ar 
+    ar-modes="quick-look scene-viewer webxr" 
+    camera-controls 
+    autoplay 
+    shadow-intensity="0">
+    
+    <button slot="ar-button" class="ar-button">
+      Ver en tu espacio 📍
+    </button>
+    
+  </model-viewer>
 
-  <script>
-    let camera, scene, renderer;
-    let particleSystem, particleGeometry;
-    const PARTICLE_COUNT = 1000;
-
-    init();
-
-    function init() {
-      // 1. Crear Escena
-      scene = new THREE.Scene();
-
-      // 2. Crear Cámara
-      camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
-
-      // 3. Crear Renderer
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(window.devicePixelRatio);
-      renderer.xr.enabled = true; // Activar soporte WebXR
-      document.body.appendChild(renderer.domElement);
-
-      // 4. CREAR SISTEMA DE PARTÍCULAS REALES EN GPU
-      particleGeometry = new THREE.BufferGeometry();
-      const positions = new Float32Array(PARTICLE_COUNT * 3);
-      const scales = new Float32Array(PARTICLE_COUNT);
-
-      // Distribuir partículas en un volumen 3D
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        positions[i * 3] = (Math.random() - 0.5) * 2;     // X (-1m a 1m)
-        positions[i * 3 + 1] = (Math.random() - 0.5) * 2; // Y (-1m a 1m)
-        positions[i * 3 + 2] = -1.5 + (Math.random() - 0.5) * 1.5; // Z (frente a la cámara)
-
-        scales[i] = Math.random();
-      }
-
-      particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-      // Textura circular suave creada con código (sin imágenes externas)
-      const canvas = document.createElement('canvas');
-      canvas.width = 64;
-      canvas.height = 64;
-      const ctx = canvas.getContext('2d');
-      const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-      gradient.addColorStop(0, 'rgba(255, 200, 100, 1)');   // Centro dorado brillante
-      gradient.addColorStop(0.4, 'rgba(255, 100, 0, 0.6)'); // Borde naranja translúcido
-      gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');        // Borde exterior transparente
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 64, 64);
-
-      const texture = new THREE.CanvasTexture(canvas);
-
-      // Material de puntos de luz con mezcla aditiva
-      const particleMaterial = new THREE.PointsMaterial({
-        color: 0xffaa44,
-        size: 0.05,
-        map: texture,
-        transparent: true,
-        blending: THREE.AdditiveBlending, // Las partículas que se solapan aumentan el brillo
-        depthWrite: false
-      });
-
-      particleSystem = new THREE.Points(particleGeometry, particleMaterial);
-      scene.add(particleSystem);
-
-      // 5. Gestión del botón para entrar en AR
-      const arButton = document.getElementById('start-ar');
-      
-      if ('xr' in navigator) {
-        navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
-          if (supported) {
-            arButton.addEventListener('click', onStartAR);
-          } else {
-            arButton.textContent = 'WebXR AR no soportado en este navegador';
-          }
-        });
-      } else {
-        arButton.textContent = 'Usa Safari (iOS 17+) o Chrome (Android) para WebAR';
-      }
-
-      window.addEventListener('resize', onWindowResize);
-    }
-
-    async function onStartAR() {
-      const session = await navigator.xr.requestSession('immersive-ar', {
-        optionalFeatures: ['dom-overlay'],
-        domOverlay: { root: document.getElementById('ar-overlay') }
-      });
-
-      renderer.xr.setSession(session);
-      document.getElementById('start-ar').style.display = 'none';
-
-      // Bucle de renderizado a 60 FPS
-      renderer.setAnimationLoop(render);
-    }
-
-    function render(time) {
-      // Animar suavemente la posición global y flotación de partículas
-      const positions = particleGeometry.attributes.position.array;
-      const t = time * 0.001; // Convertir milisegundos a segundos
-
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        // Movimiento de flotación vertical tipo "respiración/luciérnagas"
-        positions[i * 3 + 1] += Math.sin(t + i) * 0.001;
-      }
-
-      particleGeometry.attributes.position.needsUpdate = true;
-      particleSystem.rotation.y = t * 0.05; // Rotación lenta de la nube entera
-
-      renderer.render(scene, camera);
-    }
-
-    function onWindowResize() {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    }
-  </script>
 </body>
 </html>
