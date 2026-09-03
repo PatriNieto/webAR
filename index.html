@@ -1,49 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WebAR</title>
-<!--cargamos libreria A-Frame y AR.js-->
-  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+  <title>Mi WebAR sin Marcador</title>
+  
+  <!-- Carga del componente <model-viewer> -->
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+  
+  <style>
+    body { margin: 0; padding: 0; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #f0f0f0; }
+    model-viewer { width: 100%; height: 80vh; }
+    .ar-button { background-color: #007AFF; color: white; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 20px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+  </style>
 </head>
-<!--seteamos el estilo del body para que ocupe toda la pantalla y no tenga scroll-->
-<body style="margin: 0px; overflow: hidden;">
-  <!--Creamos la escena de A-Frame con AR.js habilitado y llamamos a la cámara del dispositivo-->
-  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-       <!--Marcador de tipo HIRO para la detección-->
-      <a-marker preset="hiro">
+<body>
 
-        <!-- Objeto 3D: Un cubo rojo interactivo sobre el marcador -->
-         <!--dibujamos un cubo rojo con posición y material especificados-->
-        <a-box id="mi-cubo" position="0 0.5 0" material="color: red;"></a-box>
-      </a-marker>
-      <!-- Cámara básica para la vista -->
-      <!--iniciamos la cámara para la escena-->
-      <a-entity camera></a-entity>
-    </a-scene>
-
-    <!--código para la interaccion-->
-    <script>
-  // Seleccionamos el cubo mediante su ID
-  const cubo = document.querySelector('#mi-cubo');
-
-  // Escuchamos el evento de toque/clic
-  cubo.addEventListener('click', function () {
-    // Array de colores para alternar
-    const colores = ['blue', 'green', 'yellow', 'purple', 'orange'];
-    const colorAleatorio = colores[Math.floor(Math.random() * colores.length)];
-    // Cambiamos el color
-    cubo.setAttribute('material', 'color', colorAleatorio);
+  <!-- Componente con soporte nativo para AR en iOS y Android -->
+  <model-viewer 
+    src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" 
+    ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
+    alt="Un astronauta en 3D" 
+    ar 
+    ar-modes="quick-look scene-viewer webxr" 
+    camera-controls 
+    shadow-intensity="1">
     
-    // Aplicamos una pequeña animación de rotación al cubo al hacer clic
-    cubo.setAttribute('animation', {
-      property: 'rotation',
-      to: '0 360 0',
-      dur: 1000,
-      easing: 'easeInOutQuad'
-    });
-  });
-</script>
+    <button slot="ar-button" class="ar-button">
+      Ver en tu espacio 📍
+    </button>
+    
+  </model-viewer>
+
 </body>
+</html>
